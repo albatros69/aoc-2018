@@ -42,9 +42,9 @@ print('Part 1:', max(neigh_counts.values()))
 # Part 2
 limit=10000
 region_size = { p: 0 for p in points if is_inner(p) }
+seen=set()
 for point in region_size:
     queue = [ point ]
-    seen=set()
     while queue:
         pt = queue.pop(0)
         if is_inner(pt) and pt not in seen and sum(distance(pt,p) for p in points) < limit:
