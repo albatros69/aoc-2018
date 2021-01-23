@@ -25,7 +25,7 @@ class Header():
         if not self.childs:
             return sum(self.metadata)
         else:
-            return sum(self.childs[i-1].value() if i<=len(self.childs) else 0 for i in self.metadata)
+            return sum(self.childs[i-1].value() if 0<i<=len(self.childs) else 0 for i in self.metadata)
 
 
 def read_header(header):
