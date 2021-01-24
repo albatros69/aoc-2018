@@ -2,7 +2,6 @@
 
 from itertools import product
 from multiprocessing import Pool
-from functools import partial
 from collections import defaultdict
 
 
