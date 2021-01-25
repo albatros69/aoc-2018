@@ -22,7 +22,7 @@ grid_serial_number = 9445
 # We tabulate the power of all the cells right and below (x,y)
 power_values_square = defaultdict(int)
 for (x,y) in product(range(300, 0, -1), range(300, 0, -1)):
-    power_values_square[x,y] = power_values_square[x,y+1]+sum(power_level(grid_serial_number,i,y) for i in range(x,301))
+    power_values_square[x,y] = power_level(grid_serial_number, x,y)+power_values_square[x,y+1]+power_values_square[x+1,y]-power_values_square[x+1,y+1]
 
 
 def power_level_square(x,y,size):
