@@ -87,7 +87,7 @@ print('Part 1:', sum(len(v)>=3 for v in samples.values()))
 # Part 2
 alternatives = sorted(samples.items(), key=lambda x: len(x[1]))
 trans_table = dict()
-while len(trans_table)<16:
+while len(trans_table)<len(Instruction.operations):
     for ((_,o), i) in alternatives:
         tmp = list(k for k in i if k not in trans_table.values())
         if len(tmp)==1:
