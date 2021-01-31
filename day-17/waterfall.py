@@ -46,13 +46,13 @@ class Ground():
     def flood(self, mark_fall=False):
         queue=deque([self.source])
         seen=set()
-        choices=[]
+        choices=set()
         falls=[]
 
         while queue:
             x,y = queue.popleft()
 
-            if y>self.max_y or (x,y) in seen:
+            if y>self.max_y:
                 continue
 
             seen.add((x,y))
@@ -62,27 +62,27 @@ class Ground():
             if self.scan[x,y+1]=='.':
                 queue.append((x,y+1))
             elif self.scan[x,y+1]=='~':
-                if self.scan[x,y] in '.':
-                    choices.append((x,y))
+                if self.scan[x,y]=='.':
+                    choices.add((x,y))
                 for i in (-1,1):
-                    if self.scan[x+i,y] in '~.':
+                    if self.scan[x+i,y] in '~.' and (x+i,y) not in seen:
                         queue.appendleft((x+i,y))
             else: # self.scan[x,y+1] == '#':
                 if self.scan[x,y]=='.':
-                    choices.append((x,y))
+                    choices.add((x,y))
                 for i in (-1,1):
-                    if self.scan[x+i,y] in '~.':
+                    if self.scan[x+i,y] in '~.' and (x+i,y) not in seen:
                         queue.appendleft((x+i,y))
                         if self.scan[x+i,y+1]=='.':
                             falls.append((x,y,-i))
 
         for (x,y,i) in falls: # remove choices contiguous to a fall
             while (x,y) in choices:
-                choices.remove((x,y))
+                choices.discard((x,y))
                 x+=i
         if len(choices)>0:
             for p in choices:
-                self.scan[p] = '~'
+                self.scan[p]='~'
             return True
 
         return False
