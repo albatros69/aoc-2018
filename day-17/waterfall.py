@@ -2,7 +2,7 @@
 
 import sys
 from collections import defaultdict, deque
-from typing import DefaultDict
+from typing import DefaultDict, Tuple
 
 lines = []
 for line in sys.stdin:
@@ -14,7 +14,7 @@ class Ground():
     max_x: int
     min_y: int
     max_y: int
-    source: int
+    source: Tuple[int]
 
     def __init__(self, lines) -> None:
         self.scan = defaultdict(lambda: '.')
