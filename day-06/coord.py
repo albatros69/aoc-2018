@@ -46,7 +46,7 @@ seen=set()
 for point in region_size:
     queue = [ point ]
     while queue:
-        pt = queue.pop(0)
+        pt = queue.pop()
         if is_inner(pt) and pt not in seen and sum(distance(pt,p) for p in points) < limit:
             region_size[point]+=1
             queue.extend(neighbours(pt))
