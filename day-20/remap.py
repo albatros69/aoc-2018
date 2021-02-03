@@ -2,7 +2,7 @@
 
 import sys
 from typing import Dict
-from collections import namedtuple, deque
+from collections import namedtuple
 from heapq import heappop, heappush
 
 lines = []
@@ -13,8 +13,6 @@ for line in sys.stdin:
 Position = namedtuple("Position", ("x", "y"))
 directions = { 'N': Position(0,1), 'S': Position(0,-1), 'E': Position(1,0), 'W': Position(-1,0), }
 rev = { 'N':'S', 'S':'N', 'E':'W', 'W':'E' }
-
-State = namedtuple("State", ('re', 'pos', 'outer_stack', 'inner_stack'))
 
 def add(pos, dir):
     if isinstance(dir, str):
@@ -74,33 +72,29 @@ class Map():
         return "\n".join(result)
 
     def expand_re(self, regex):
-        queue = deque([ State(regex, Position(0,0), [], []) ])
         self.carto[Position(0,0)] = Room(0,0, state='X')
 
-        while queue :
-            state = queue.popleft()
-
-            if state.re=='':
-                break
-            elif state.re[0]=='(':
-                queue.appendleft(State(state.re[1:], state.pos, state.outer_stack+[(state.pos, state.inner_stack[:])], []))
-            elif state.re[0]=='|':
-                old_pos, _ = state.outer_stack[-1]
-                queue.appendleft(State(state.re[1:], old_pos, state.outer_stack[:], state.inner_stack+[state.pos]))
-            elif state.re[0]==')':
-                _, old_inner_stack = state.outer_stack.pop()
-                for branch_pos in state.inner_stack+[state.pos]:
-                    queue.appendleft(State(state.re[1:], branch_pos, state.outer_stack[:], old_inner_stack))
-            else: # state.re[0] in 'NSEW':
-                dir = state.re[0]
-                new_pos = add(state.pos, dir)
+        pos = Position(0,0)
+        stack = []
+        while regex:
+            if regex[0]=='(':
+                stack.append(pos)
+            elif regex[0]=='|':
+                pos = stack[-1]
+            elif regex[0]==')':
+                stack.pop()
+            else: # regex[0] in 'NSEW':
+                dir = regex[0]
+                new_pos = add(pos, dir)
 
                 if new_pos not in self.carto:
                     self.carto[new_pos] = Room(*new_pos)
 
-                self.carto[state.pos].neigh[dir] = self.carto[new_pos]
-                self.carto[new_pos].neigh[rev[dir]] = self.carto[state.pos]
-                queue.appendleft(State(state.re[1:], new_pos, state.outer_stack, state.inner_stack))
+                self.carto[pos].neigh[dir] = self.carto[new_pos]
+                self.carto[new_pos].neigh[rev[dir]] = self.carto[pos]
+                pos = new_pos
+
+            regex = regex[1:]
 
     def furthest_room(self):
         """ Shortest path to a target """
