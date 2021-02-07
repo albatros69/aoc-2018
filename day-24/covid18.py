@@ -74,7 +74,7 @@ for l in lines:
 
 def battle(subject):
 
-    monit = 0 # needed in case the all the effective powers are lower than the hit points (-> infinite loop)
+    monit = 0 # needed in case all the effective powers are lower than the hit points (-> infinite loop)
     while True:
         # Target selection
         targets = dict()
