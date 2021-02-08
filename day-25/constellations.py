@@ -29,13 +29,14 @@ for l in lines:
     else:
         constellations.append(set((pt, )))
 
-for _ in range(len(constellations)):
+result = []
+while constellations:
     a = constellations.popleft()
     for b in constellations:
         if is_constellation(a,b):
             b.update(a)
             break
     else:
-        constellations.append(a)
+        result.append(a)
 
-print("Part 1:", len(constellations))
+print("Part 1:", len(result))
